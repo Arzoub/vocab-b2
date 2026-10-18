@@ -1,0 +1,266 @@
+<title>Carnet vocab B2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: one study column; sticky header with mastery gauge; three modes (Fiches / Cartes / Test) */
+:root{
+  --bg:#F4F5FA; --surface:#FFFFFF; --fg:#1A1F33; --muted:#5D6480; --line:#DDE0EC;
+  --ink:#2E46CF; --ink-soft:#E6EAFD; --marker:#FFE36B; --marker-fg:#1A1F33;
+  --good:#1E8A52; --good-soft:#DFF3E7; --bad:#C2372E; --bad-soft:#FBE3E1;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11131B; --surface:#1A1D29; --fg:#E7E9F3; --muted:#9AA1BC; --line:#2C3043;
+  --ink:#93A5FF; --ink-soft:#232A4D; --marker:#7A6614; --marker-fg:#FFF6CC;
+  --good:#5FD196; --good-soft:#163526; --bad:#FF8A80; --bad-soft:#3D1D1B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11131B; --surface:#1A1D29; --fg:#E7E9F3; --muted:#9AA1BC; --line:#2C3043;
+  --ink:#93A5FF; --ink-soft:#232A4D; --marker:#7A6614; --marker-fg:#FFF6CC;
+  --good:#5FD196; --good-soft:#163526; --bad:#FF8A80; --bad-soft:#3D1D1B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{padding-block:14px 12px;display:grid;gap:10px}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;font-size:1.45rem;margin:0;letter-spacing:-.01em}
+h1 mark{background:linear-gradient(transparent 55%,var(--marker) 55%);color:inherit;padding:0 .1em}
+.gauge{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.gauge b{color:var(--fg)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--good);width:0;transition:width .4s}
+nav{display:flex;gap:6px}
+nav button{flex:1;font:700 .95rem var(--body);padding:9px 8px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+nav button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+main .wrap{padding-block:20px 60px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+select,.search{font:inherit;font-size:.95rem;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.search{flex:1;min-width:0}
+.blank{display:inline-block;min-width:5.5em;border-bottom:2px dashed var(--muted);text-align:center;color:transparent}
+.fill{background:var(--marker);color:var(--marker-fg);padding:0 .2em;border-radius:3px;font-weight:700}
+/* Fiches */
+h2{font-family:var(--display);font-weight:600;font-size:1.05rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 8px}
+h2:first-of-type{margin-top:4px}
+.item{padding:14px 0;border-top:1px solid var(--line);display:grid;gap:4px}
+.item .head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.item .w{font-family:var(--display);font-weight:800;font-size:1.15rem}
+.item .fr{color:var(--ink);font-weight:700}
+.item .s{margin:0}
+.item .n{margin:0;font-size:.92rem;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none;align-self:center}
+.dot.ok{background:var(--good)}
+.trap{font-size:.82rem;color:var(--bad);background:var(--bad-soft);padding:2px 8px;border-radius:99px;width:fit-content}
+/* Card / quiz panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:16px}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.q{font-size:1.2rem;line-height:1.6;margin:0}
+.opts{display:grid;gap:8px}
+.opt{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.right{background:var(--good-soft);border-color:var(--good);color:var(--fg);font-weight:700}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);text-decoration:line-through}
+.typed{display:flex;gap:8px;flex-wrap:wrap}
+.typed input{flex:1;min-width:0;font:inherit;font-size:1.1rem;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.btn{font:700 1rem var(--body);padding:11px 18px;border-radius:10px;border:0;background:var(--ink);color:var(--surface);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn.good{background:var(--good);color:var(--surface)}
+.btn.bad{background:var(--bad);color:var(--surface)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1}
+.fb{border-radius:10px;padding:12px 14px;display:grid;gap:4px}
+.fb.ok{background:var(--good-soft)}
+.fb.ko{background:var(--bad-soft)}
+.fb strong{font-family:var(--display);font-size:1.05rem}
+.fb p{margin:0}
+.hint{font-size:.85rem;color:var(--muted)}
+.card{cursor:pointer;min-height:220px;align-content:center;text-align:center}
+.card .back{display:grid;gap:6px}
+.card .big{font-family:var(--display);font-weight:800;font-size:1.6rem}
+.done{text-align:center}
+.done .score{font-family:var(--display);font-weight:800;font-size:3rem;font-variant-numeric:tabular-nums}
+.tip{font-size:.9rem;color:var(--muted);margin:0 0 14px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+
+<header><div class="wrap">
+  <div class="top">
+    <h1>Carnet vocab <mark>B2</mark></h1>
+    <span class="gauge"><b id="gN">0</b> / <span id="gT">0</span> maîtrisés</span>
+  </div>
+  <div class="bar"><i id="gBar"></i></div>
+  <nav>
+    <button id="tab-list" aria-pressed="true" data-m="list">Fiches</button>
+    <button id="tab-cards" aria-pressed="false" data-m="cards">Cartes</button>
+    <button id="tab-quiz" aria-pressed="false" data-m="quiz">Test</button>
+  </nav>
+</div></header>
+<main><div class="wrap" id="view"></div></main>
+
+<script>
+const T={pv:"Phrasal verbs",id:"Expressions",job:"Travail & argent",wf:"Formation de mots",mx:"Mots à bien choisir"};
+const D=[
+{t:"pv",s:"I couldn't see where I was going, and I ___ a loose wire on the ground. As a result, I dropped the television and it crashed down the stairs!",a:"tripped over",o:["stumbled on","tripped over","fell on","slipped over"],fr:"trébucher sur",n:"trip over sth = se prendre les pieds dans un obstacle. « stumble upon » = tomber par hasard sur."},
+{t:"pv",s:"I've come back from holiday to a huge pile of work. I don't know how I'm going to ___ up on it all!",a:"catch",fr:"rattraper (son retard)",n:"catch up on sth = rattraper du travail en retard. catch up with sb = rattraper qqn."},
+{t:"pv",s:"It's a real challenge but I think they'll manage to pull it ___.",a:"off",o:["off","over","up","away"],fr:"réussir (un exploit)",n:"pull it off = réussir quelque chose de difficile. « pull over » = se garer sur le côté.",trap:"away"},
+{t:"pv",s:"Before you hand in your dissertation, I'd advise you to ___",a:"go through it again.",o:["go for it again.","go through it again.","go into it again.","go back on it again."],fr:"relire, repasser en revue",n:"go through = examiner en détail. go back on (a promise) = revenir sur (une promesse)."},
+{t:"pv",s:"If you could just bear a little longer ___ me, I'll explain the plans for the next financial quarter.",a:"with",fr:"patienter (avec moi)",n:"Bear with me = « un instant de patience ». Toujours bear WITH."},
+{t:"pv",s:"Grace told me that 'Anderson' is a fairly new company. When was it actually ___?",a:"set up",o:["set up","set back","set off"],fr:"fonder, créer",n:"set up a company = créer une entreprise. set back = retarder ; set off = partir / déclencher."},
+{t:"pv",s:"John is very clumsy. Yesterday he was cycling down the street and he knocked ___ a police officer!",a:"over",o:["over","up","on","off"],fr:"renverser",n:"knock over = faire tomber, renverser. Évite « knock up » (très familier, autre sens)."},
+{t:"pv",s:"- Do you speak French?\n- Well, I'm no orator, but I can get ___.",a:"by",fr:"se débrouiller",n:"get by = s'en sortir avec le minimum (langue, argent)."},
+{t:"pv",s:"As a result of his accident, the car was completely ___ off and we had to buy a new one.",a:"written",fr:"déclaré épave (perte totale)",n:"write off (wrote, written) = déclarer une perte totale ; aussi annuler une dette."},
+{t:"pv",s:"When you're upset, it's always better to be honest than to ___ your feelings up.",a:"bottle",fr:"refouler (ses émotions)",n:"bottle up your feelings = garder tout pour soi, comme dans une bouteille fermée."},
+{t:"pv",s:"I wanted to lose some weight, so I decided to ___ up drinking beer.",a:"give",fr:"arrêter de",n:"give up + verbe en -ING (give up smoking, give up drinking)."},
+{t:"pv",s:"Our latest research shows that business is booming at the moment. I think it's the right time to ___ more staff.",a:"take on",o:["take on","take in","take upon"],fr:"embaucher",n:"take on staff = recruter ; take on a task = accepter une tâche. take in = héberger / comprendre / duper."},
+{t:"pv",s:"- Hi John, do you know what time we have to be at the seminar?\n- No, it's not on the notice board, but I could always ring the secretary and try to ___.",a:"find out",fr:"se renseigner, découvrir",n:"find out = obtenir une information. Réponse en 2 mots.",trap:"call you"},
+{t:"pv",s:"- How is your company performing at the moment?\n- Not very well, unfortunately. The economic crisis has had a huge impact on us. Last month we had to ___ 20 employees.",a:"lay off",o:["hire","cut out","give up","lay off"],fr:"licencier (raisons économiques)",n:"lay off (laid off) = licencier faute de travail ; sb is laid off."},
+
+{t:"id",s:"The argument between Stephanie and Sue was really bad – they almost came to ___.",a:"blows",o:["punches","blows","fists","kicks"],fr:"en venir aux mains",n:"come to blows = expression figée. Les autres mots n'existent pas dans cette expression.",trap:"kicks"},
+{t:"id",s:"Well everyone, I think we'll leave it there, as the ___ goes: 'Time and tide wait for no man'.",a:"saying",fr:"comme dit le proverbe",n:"as the saying goes = comme on dit. a saying = un dicton."},
+{t:"id",s:"I'm not going to ___ my words: the company is in desperate need of restructuring!",a:"mince",o:["mince","chew","swallow","grind"],fr:"ne pas mâcher ses mots",n:"Piège pour francophones : en anglais on ne « mâche » pas (chew), on dit NOT MINCE one's words."},
+{t:"id",s:"- Do you think the new funding is a good idea?\n- Well, it's ___ time the government did something.",a:"high",o:["tall","long","far","high"],fr:"il est grand temps que",n:"It's high time + sujet + PRÉTÉRIT (did, kept…)."},
+{t:"id",s:"- The new clients are not responding to our product the way we had hoped.\n- Frankly, I'm hardly ___ with last month's sales.",a:"over the moon",o:["on cloud nine","over the moon","beside myself","down in the dumps"],fr:"aux anges, ravi",n:"be over the moon (with/about) = fou de joie. beside oneself = hors de soi ; down in the dumps = déprimé."},
+{t:"id",s:"Chloe was under the impression that I had criticised her report, when all I had said was that it needed a little fine-tuning! I didn't want problems between us, so I called her in to set the ___ straight.",a:"record",o:["version","record","recount","story"],fr:"mettre les choses au clair",n:"set the record straight = rétablir la vérité."},
+{t:"id",s:"They told me they were brothers. However, between their black and blonde hair, and blue and brown eyes, they bore no ___ to each other!",a:"resemblance",fr:"ne se ressembler en rien",n:"bear (bore) no resemblance to = n'avoir aucune ressemblance avec."},
+{t:"id",s:"He bought insurance, not because he needed it, but because it offered him ___ of mind.",a:"peace",fr:"tranquillité d'esprit",n:"peace of mind = sérénité, être rassuré."},
+{t:"id",s:"You promised you wouldn't tell anyone. It is high time you ___ your word!",a:"kept",fr:"tenir parole",n:"keep one's word = tenir sa promesse. Prétérit après « it is high time you »."},
+{t:"id",s:"After parking for five minutes to deliver a letter, he found out that the post office was closed. To add ___ to injury, when he got back to his car, it had been broken into.",a:"insult",fr:"pour couronner le tout",n:"to add insult to injury = pour aggraver les choses."},
+{t:"id",s:"- That report was terrible.\n- I know! It left a lot to be ___.",a:"desired",fr:"laisser à désirer",n:"leave a lot to be desired = même image qu'en français."},
+{t:"id",s:"The event that they organised was a ___ cry from what they had initially imagined.",a:"far",fr:"très loin de",n:"a far cry from = rien à voir avec."},
+{t:"id",s:"When I was at school I got into big trouble: even though smoking was strictly forbidden, I used to have a sneaky cigarette behind the bike shed. Then one day I was caught with a cigarette in my mouth… The speaker was caught ___.",a:"red-handed",o:["with mud in his face","red-faced","red-handed","with itchy feet"],fr:"pris la main dans le sac",n:"caught red-handed = pris en flagrant délit. red-faced = rouge de honte ; itchy feet = envie de partir."},
+{t:"id",s:"- Ahhh, he is so annoying to work with!\n- Yeah I know, he's really getting on my ___ as well.",a:"nerves",fr:"taper sur les nerfs",n:"get on sb's nerves = énerver qqn."},
+{t:"id",s:"She's chosen blue for the walls, but knowing Sue she's ___ change her mind.",a:"bound to",o:["probably","surely to","certainly","bound to"],fr:"c'est sûr qu'elle va",n:"be bound to + verbe = être certain de. « She's probably change » est faux : il manque « going to »."},
+{t:"id",s:"The expert tells me the company has been reaching its goals ___ of schedule.",a:"ahead",fr:"en avance sur le planning",n:"ahead of schedule ≠ behind schedule (en retard)."},
+
+{t:"job",s:"I was reading the newspaper this morning and I noticed there has been a sharp rise in the number of employees suing their former bosses for unfair ___.",a:"dismissal",o:["firing","expulsion","layoff","dismissal"],fr:"licenciement abusif",n:"unfair dismissal = terme juridique figé. sue = poursuivre en justice.",trap:"firing"},
+{t:"job",s:"I'm really interested in working for your company, but could you tell me exactly what the job ___?",a:"entails",o:["consists","means","entails","implicates"],fr:"implique, comporte",n:"What does the job entail? = en quoi consiste le poste ? « consists » demanderait « of »."},
+{t:"job",s:"After university, I did a short ___ in the army before going into banking.",a:"stint",fr:"passage, période",n:"a stint = une période de travail à un endroit."},
+{t:"job",s:"I used to be a security guard at a local factory, but I couldn't get used to ___ and the early mornings and late nights that come with it.",a:"shift work",o:["shift work","flexible hours","full time","contract work"],fr:"travail posté (en équipes)",n:"shift = poste / équipe (night shift)."},
+{t:"job",s:"The company let the employees know that five people had been ___ to the project.",a:"assigned",o:["assigned","selected","dedicated"],fr:"affecté à",n:"be assigned to a project/task = être affecté à."},
+{t:"job",s:"Shouldn't we try to provide ___ for companies to produce goods and services in a more environmentally friendly way instead of fining them?",a:"an incentive",o:["an incentive","a reward","a bonus","a prize"],fr:"une incitation",n:"an incentive (for sb) to do sth = ce qui motive à agir. fine = mettre une amende."},
+{t:"job",s:"We've had to make a lot of ___ as we're not performing very well. 19 members of staff had to be laid off last month.",a:"cutbacks",o:["belt-tightening","reductions","cutbacks","rollbacks"],fr:"coupes, réductions de dépenses",n:"make cutbacks = faire des économies forcées."},
+{t:"job",s:"My company was very successful in 2014, with ___ of £20 million.",a:"profits",o:["gains","profits","income","benefits"],fr:"bénéfices",n:"Faux ami : benefits = avantages (sociaux). Bénéfices = profits."},
+{t:"job",s:"I think September is the best time to start carrying out the surveys. Until then, Bob and Joe are ___ in other projects.",a:"involved",o:["implicated","implied","occupied","involved"],fr:"impliqués, occupés sur",n:"be involved in = participer à. implicated in = mêlé à (un crime)."},
+{t:"job",s:"Our products are ___ acknowledged to be the market leaders in our industry.",a:"widely",o:["widely","largely","hugely","easily"],fr:"largement reconnu",n:"widely acknowledged / recognised / known = collocation fixe."},
+{t:"job",s:"- How often do your workers ___ the temperature readings in the factory?\n- Twice a day.",a:"take",o:["take","make","read","find"],fr:"relever (une mesure)",n:"take a reading / take measurements."},
+{t:"job",s:"Did you buy a ticket for the car park? I don't want you to get a ___.",a:"fine",o:["sum","fine","bill","notice"],fr:"amende",n:"get a fine = recevoir une amende. bill = facture."},
+
+{t:"wf",s:"As is often the case with exceptional ___ documents, the forty-eight surviving copies of the Gutenberg Bible are considered to be among the most valuable books in the world. (adjectif de « history »)",a:"historical",fr:"historique",n:"Avant un nom, il faut un ADJECTIF, pas un adverbe. historical = lié au passé ; historic = qui marque l'histoire.",trap:"historically"},
+{t:"wf",s:"- She \"only\" got 98% in her last exam.\n- Oh, no! She must be devastated! She's such a ___. (nom de « perfect »)",a:"perfectionist",fr:"perfectionniste",n:"perfect → perfection → perfectionist (la personne)."},
+{t:"wf",s:"The banker earns over 5 million euros per year due to his ___ skill in finance. (adjectif de « parallel »)",a:"unparalleled",fr:"sans égal",n:"un- + parallel + -ed. « incomparable » a le bon sens mais n'est pas formé sur « parallel ».",trap:"incomparable"},
+{t:"wf",s:"What surprises some outside observers is the ___ with which the country is governed. (nom de « secret »)",a:"secrecy",fr:"le secret, l'opacité",n:"secret → secrecy (le fait de cacher)."},
+{t:"wf",s:"It is recommended that you follow the lessons in ___ order. (adjectif de « sequence »)",a:"sequential",fr:"séquentiel, dans l'ordre",n:"sequence → sequential."},
+
+{t:"mx",s:"- I didn't have enough time to check.\n- I'm sorry, but you had ___ time to verify the mistakes in your calculations.",a:"ample",o:["tolerable","ample","abundant","satisfactory"],fr:"largement assez de",n:"ample time = plus de temps qu'il n'en faut. abundant = pour des ressources (abundant water)."},
+{t:"mx",s:"I have many wonderful pictures which ___ our long friendship.",a:"document",o:["report","document","outline","relate"],fr:"retracer, témoigner de",n:"document (verbe) = garder une trace de."},
+{t:"mx",s:"On Election Day, voters go to the ___ station to cast their votes.",a:"polling",o:["electoral","voting","election","polling"],fr:"bureau de vote",n:"polling station ; cast a vote = voter."},
+{t:"mx",s:"- Carly has been late for work four mornings in a row!\n- Her boss hasn't said anything yet, but it's clear she's not too ___ about it.",a:"thrilled",o:["elated","keen","enthusiastic","thrilled"],fr:"pas ravi",n:"not too thrilled about = pas enchanté. keen se construit avec « on »."},
+{t:"mx",s:"I'm so busy that I can't take a day off, ___ go on holiday!",a:"let alone",o:["furthermore","let alone","aside from","still less"],fr:"et encore moins",n:"let alone = sans parler de, encore moins (après une phrase négative)."},
+{t:"mx",s:"We've achieved a lot today, but, ___ the time constraints, I suggest that we stop now and continue tomorrow morning.",a:"in view of",o:["viewing","in view of","with a view to","in view"],fr:"étant donné, vu",n:"in view of = compte tenu de. with a view to + -ING = dans le but de."},
+{t:"mx",s:"After a number of failed attempts to reach an out-of-court settlement, the actress ___ to suing the newspaper for libel.",a:"resorted",fr:"a eu recours à",n:"resort to + -ING = recourir à. libel = diffamation (écrite)."},
+{t:"mx",s:"As a surgeon, I have a great deal of responsibility taking care of my patients. There is such a small ___ for error when operating that I need to take every necessary precaution.",a:"margin",fr:"marge d'erreur",n:"margin for error / margin of error."},
+{t:"mx",s:"- Do you like living in Brussels?\n- Yes, I do, ___ I'm more used to living in the countryside.",a:"even though",o:["even though","whereas","whilst","even so"],fr:"bien que",n:"even though + phrase = même si. even so = malgré cela (en début de phrase)."}
+];
+D.forEach((d,i)=>{d.id=i;d.acc=[d.a.toLowerCase().replace(/[.!?]/g,"").trim()];});
+const AKA={margin:["margin"],"find out":["find out"]};
+
+const KEY="vocabB2.v1";let ST={};
+try{ST=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){ST={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
+const st=id=>ST[id]||(ST[id]={ok:0,ko:0,run:0});
+const mastered=id=>(ST[id]&&ST[id].run>=2);
+function mark(id,good){const s=st(id);if(good){s.ok++;s.run++}else{s.ko++;s.run=0}save();gauge()}
+function gauge(){const n=D.filter(d=>mastered(d.id)).length;gN.textContent=n;gT.textContent=D.length;gBar.style.width=(100*n/D.length)+"%"}
+
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sent=(d,filled)=>esc(d.s).replace(/\n/g,"<br>").replace("___",filled?`<span class="fill">${esc(d.a)}</span>`:`<span class="blank">____</span>`);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.toLowerCase().replace(/[’']/g,"'").replace(/[.!?,]/g,"").replace(/\s+/g," ").trim();
+
+let mode="list",filter="all",q="";
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
+
+function pool(){let p=D;if(filter==="weak")p=D.filter(d=>!mastered(d.id));else if(filter==="trap")p=D.filter(d=>d.trap);else if(filter!=="all")p=D.filter(d=>d.t===filter);return p}
+function filterSelect(){return `<select id="flt" aria-label="Filtrer">
+<option value="all">Les ${D.length} mots</option>
+<option value="weak">Pas encore maîtrisés</option>
+<option value="trap">Pièges des photos</option>
+${Object.entries(T).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>`}
+function bindFilter(cb){const f=document.getElementById("flt");f.value=filter;f.onchange=()=>{filter=f.value;cb()}}
+
+function render(){({list:renderList,cards:startCards,quiz:startQuiz})[mode]()}
+
+function renderList(){
+  view.innerHTML=`<p class="tip">Lis chaque phrase en entier : à l'examen, c'est le contexte qui te donne la réponse. Le point vert indique un mot maîtrisé (2 bonnes réponses de suite).</p>
+  <div class="controls">${filterSelect()}<input class="search" id="srch" type="search" placeholder="Chercher un mot…" value="${esc(q)}"></div><div id="lst"></div>`;
+  bindFilter(renderList);
+  const s=document.getElementById("srch");s.oninput=()=>{q=s.value;draw()};
+  function draw(){
+    const p=pool().filter(d=>!q||(d.a+" "+d.fr+" "+d.s).toLowerCase().includes(q.toLowerCase()));
+    let h="";for(const k of Object.keys(T)){const g=p.filter(d=>d.t===k);if(!g.length)continue;
+      h+=`<h2>${T[k]} · ${g.length}</h2>`+g.map(d=>`<div class="item">
+      <div class="head"><span class="dot ${mastered(d.id)?"ok":""}" title="${mastered(d.id)?"Maîtrisé":"À travailler"}"></span><span class="w">${esc(d.a)}</span><span class="fr">${esc(d.fr)}</span></div>
+      <p class="s">${sent(d,true)}</p><p class="n">${esc(d.n)}</p>
+      ${d.trap?`<span class="trap">Sur la photo : « ${esc(d.trap)} », c'est faux</span>`:""}</div>`).join("")}
+    lst.innerHTML=h||`<p class="tip">Aucun mot ne correspond.</p>`}
+  draw();
+}
+
+let cq=[],ci=0,flipped=false;
+function startCards(){cq=shuffle(pool());ci=0;flipped=false;drawCard()}
+function drawCard(){
+  if(!cq.length){view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><p>Aucune carte dans ce filtre. Tout est maîtrisé ici.</p></div>`;bindFilter(startCards);return}
+  if(ci>=cq.length){view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><div class="score">✓</div><p>Paquet terminé.</p><div class="row"><button class="btn" id="again">Recommencer</button></div></div>`;bindFilter(startCards);again.onclick=startCards;return}
+  const d=cq[ci];
+  view.innerHTML=`<div class="controls">${filterSelect()}</div>
+  <div class="panel card" id="crd" tabindex="0" role="button" aria-label="Retourner la carte">
+    <div class="meta"><span>${T[d.t]}</span><span>${ci+1} / ${cq.length}</span></div>
+    ${flipped?`<div class="back"><span class="big">${esc(d.a)}</span><span class="fr" style="color:var(--ink);font-weight:700">${esc(d.fr)}</span><p class="q" style="font-size:1rem">${sent(d,true)}</p><p class="hint">${esc(d.n)}</p></div>`
+    :`<p class="q">${sent(d,false)}</p><p class="hint">Trouve le mot dans ta tête, puis touche la carte.</p>`}
+  </div>
+  ${flipped?`<div class="row" style="margin-top:12px"><button class="btn bad" id="no">À revoir</button><button class="btn good" id="yes">Je savais</button></div>`:""}`;
+  bindFilter(startCards);
+  const c=document.getElementById("crd");const flip=()=>{if(!flipped){flipped=true;drawCard()}};
+  c.onclick=flip;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}};
+  if(flipped){yes.onclick=()=>{mark(d.id,true);ci++;flipped=false;drawCard()};
+    no.onclick=()=>{mark(d.id,false);cq.push(d);ci++;flipped=false;drawCard()}}
+}
+
+let qq=[],qi=0,score=0,total=0,missed=new Set();
+function startQuiz(){qq=shuffle(pool());qi=0;score=0;total=qq.length;missed=new Set();drawQ()}
+function drawQ(){
+  if(!qq.length){view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><p>Rien à tester dans ce filtre.</p></div>`;bindFilter(startQuiz);return}
+  if(qi>=qq.length){const pct=Math.round(100*score/total);
+    view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><p class="hint">Bonnes réponses du premier coup</p><div class="score">${score} / ${total}</div>
+    <p>${pct>=85?"Niveau solide. Refais un tour demain pour fixer.":pct>=60?"Bien parti. Repasse les mots ratés en mode « Pas encore maîtrisés ».":"Repasse par les Fiches puis les Cartes avant de retenter."}</p>
+    <div class="row"><button class="btn" id="again">Nouveau test</button></div></div>`;bindFilter(startQuiz);again.onclick=startQuiz;return}
+  const d=qq[qi];const retry=missed.has(d.id);
+  view.innerHTML=`<div class="controls">${filterSelect()}</div>
+  <div class="panel">
+    <div class="meta"><span>${d.o?"Choisissez la bonne réponse":"Remplissez le blanc"+(d.a.includes(" ")?" · 2 mots":" · 1 mot")}${retry?" · 2e essai":""}</span><span>${qi+1} / ${qq.length} · score ${score}</span></div>
+    <p class="q" id="qs">${sent(d,false)}</p>
+    ${d.o?`<div class="opts">${shuffle(d.o).map(o=>`<button class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`
+    :`<form class="typed" id="tf"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse"><button class="btn">Valider</button></form>`}
+    <div id="fb"></div>
+  </div>`;
+  bindFilter(startQuiz);
+  if(d.o){document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(d,b.dataset.v))}
+  else{ans.focus({preventScroll:true});tf.onsubmit=e=>{e.preventDefault();if(ans.value.trim())answer(d,ans.value)}}
+}
+function answer(d,v){
+  const good=d.acc.includes(norm(v));
+  if(good&&!missed.has(d.id))score++;
+  mark(d.id,good);
+  if(!good&&!missed.has(d.id)){missed.add(d.id);qq.splice(Math.min(qi+4,qq.length),0,d)}
+  qs.innerHTML=sent(d,true);
+  if(d.o)document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(norm(b.dataset.v)===d.acc[0])b.classList.add("right");else if(b.dataset.v===v)b.classList.add("wrong")});
+  else{ans.disabled=true;tf.querySelector("button").disabled=true}
+  fb.innerHTML=`<div class="fb ${good?"ok":"ko"}"><strong>${good?"Correct":"Réponse : "+esc(d.a)}</strong><p><b>${esc(d.fr)}</b></p><p>${esc(d.n)}</p>${!good?`<p class="hint">Cette question reviendra un peu plus loin.</p>`:""}</div>
+  <div class="row" style="margin-top:12px"><button class="btn" id="nx">Suivant</button></div>`;
+  nx.focus({preventScroll:true});nx.onclick=()=>{qi++;drawQ()};
+}
+gauge();render();
+</script>
