@@ -1,4 +1,4 @@
-<title>Carnet vocab B2</title>
+<title>Carnet anglais B2</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
@@ -32,6 +32,10 @@ h1 mark{background:linear-gradient(transparent 55%,var(--marker) 55%);color:inhe
 .gauge b{color:var(--fg)}
 .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--good);width:0;transition:width .4s}
+.subj{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.subj button{font:700 1rem var(--display);padding:10px 8px;border:0;background:var(--bg);color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+.subj button small{font:400 .75rem var(--body);font-variant-numeric:tabular-nums}
+.subj button[aria-pressed="true"]{background:var(--marker);color:var(--marker-fg)}
 nav{display:flex;gap:6px}
 nav button{flex:1;font:700 .95rem var(--body);padding:9px 8px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
 nav button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
@@ -40,7 +44,7 @@ main .wrap{padding-block:20px 60px}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 select,.search{font:inherit;font-size:.95rem;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
 .search{flex:1;min-width:0}
-.blank{display:inline-block;min-width:5.5em;border-bottom:2px dashed var(--muted);text-align:center;color:transparent}
+.blank{display:inline-block;min-width:5.5em;border-bottom:2px dashed var(--muted);text-align:center;color:var(--muted);font-size:.85em;font-weight:700}
 .fill{background:var(--marker);color:var(--marker-fg);padding:0 .2em;border-radius:3px;font-weight:700}
 /* Fiches */
 h2{font-family:var(--display);font-weight:600;font-size:1.05rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 8px}
@@ -58,6 +62,7 @@ h2:first-of-type{margin-top:4px}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:16px}
 .meta{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
 .q{font-size:1.2rem;line-height:1.6;margin:0}
+.long .q{font-size:1rem}
 .opts{display:grid;gap:8px}
 .opt{font:inherit;text-align:left;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 .opt:hover:not(:disabled){border-color:var(--ink)}
@@ -88,11 +93,16 @@ h2:first-of-type{margin-top:4px}
 
 <header><div class="wrap">
   <div class="top">
-    <h1>Carnet vocab <mark>B2</mark></h1>
-    <span class="gauge"><b id="gN">0</b> / <span id="gT">0</span> maîtrisés</span>
+    <h1>Carnet anglais <mark>B2</mark></h1>
+    <span class="gauge"><b id="gN">0</b> / <span id="gT">0</span> maîtrisés ici</span>
   </div>
   <div class="bar"><i id="gBar"></i></div>
-  <nav>
+  <div id="subj" class="subj" role="group" aria-label="Matière">
+    <button id="sub-v" data-s="v" aria-pressed="true">Vocabulaire <small></small></button>
+    <button id="sub-g" data-s="g" aria-pressed="false">Grammaire <small></small></button>
+    <button id="sub-r" data-s="r" aria-pressed="false">Lecture <small></small></button>
+  </div>
+  <nav id="modes">
     <button id="tab-list" aria-pressed="true" data-m="list">Fiches</button>
     <button id="tab-cards" aria-pressed="false" data-m="cards">Cartes</button>
     <button id="tab-quiz" aria-pressed="false" data-m="quiz">Test</button>
@@ -101,7 +111,6 @@ h2:first-of-type{margin-top:4px}
 <main><div class="wrap" id="view"></div></main>
 
 <script>
-const T={pv:"Phrasal verbs",id:"Expressions",job:"Travail & argent",wf:"Formation de mots",mx:"Mots à bien choisir"};
 const D=[
 {t:"pv",s:"I couldn't see where I was going, and I ___ a loose wire on the ground. As a result, I dropped the television and it crashed down the stairs!",a:"tripped over",o:["stumbled on","tripped over","fell on","slipped over"],fr:"trébucher sur",n:"trip over sth = se prendre les pieds dans un obstacle. « stumble upon » = tomber par hasard sur."},
 {t:"pv",s:"I've come back from holiday to a huge pile of work. I don't know how I'm going to ___ up on it all!",a:"catch",fr:"rattraper (son retard)",n:"catch up on sth = rattraper du travail en retard. catch up with sb = rattraper qqn."},
@@ -164,48 +173,177 @@ const D=[
 {t:"mx",s:"As a surgeon, I have a great deal of responsibility taking care of my patients. There is such a small ___ for error when operating that I need to take every necessary precaution.",a:"margin",fr:"marge d'erreur",n:"margin for error / margin of error."},
 {t:"mx",s:"- Do you like living in Brussels?\n- Yes, I do, ___ I'm more used to living in the countryside.",a:"even though",o:["even though","whereas","whilst","even so"],fr:"bien que",n:"even though + phrase = même si. even so = malgré cela (en début de phrase)."}
 ];
-D.forEach((d,i)=>{d.id=i;d.acc=[d.a.toLowerCase().replace(/[.!?]/g,"").trim()];});
-const AKA={margin:["margin"],"find out":["find out"]};
+const G=[
+{t:"gt",s:"- Excuse me, where can I catch the train to Brussels?\n- I'm sorry sir, you're too late. The train ___",a:"has just left.",o:["was going to leave.","has gone.","has been leaving.","has just left."],fr:"vient de partir",n:"has just + participe passé = venir de (action très récente, liée au présent)."},
+{t:"gt",s:"- Look there's Ann, she's talking to John. I didn't know that they knew each other.\n- Really? John told me that they ___ for the same company for years!",a:"have been working",o:["had worked","will have worked","were working","have been working"],fr:"travaillent ensemble depuis des années",n:"for years + action qui dure encore → present perfect continu."},
+{t:"gt",s:"John ___ in prison for two years so far. He has one more year left.",a:"has been",o:["was","have been","has been","is"],fr:"est en prison depuis 2 ans",n:"so far / depuis + situation toujours vraie → present perfect. « John » = he → has."},
+{t:"gt",s:"- I met Steve yesterday.\n- How is he?\n- He's fine. He ___ to work, so I didn't have much time to talk to him.",a:"was going",o:["didn't go","goes","is going","was going"],fr:"il était en train d'aller",n:"Action en cours dans le passé, interrompue par une autre → past continuous."},
+{t:"gt",s:"Jim was taking his son to football training, and he ___ for 15 minutes when he realised that his son wasn't in the car!",a:"had been driving",o:["has been driving","was driving","drove","had been driving"],fr:"il roulait depuis 15 minutes",n:"Durée (for 15 minutes) AVANT un moment passé (when he realised) → past perfect continu."},
+{t:"gt",s:"Yesterday I started eating my lunch at 12pm and finished at 1pm. At 12.30 pm yesterday I ___ my lunch.",a:"was eating",o:["ate","was eating","am eating","eat"],fr:"j'étais en train de manger",n:"À un moment précis du passé, action en cours → past continuous."},
+{t:"gt",s:"- Did you see that documentary about the famous singer, Mark Wonder?\n- No, I didn't. What was it about?\n- A record label manager claimed that most of his songs ___ by another singer!",a:"had been written",o:["had written","were being written","had been written","had been writing"],fr:"avaient été écrites",n:"Passif (les chansons sont écrites PAR qqn) + antériorité dans le passé → had been + participe."},
+{t:"gt",s:"The suspect claimed that he ___ badly treated by the prison officers when he was in prison.",a:"had been",o:["has been","is being","was being","had been"],fr:"avait été maltraité",n:"Discours rapporté au passé (claimed) + passif → had been treated."},
+{t:"gt",s:"Did Laura go to the conference? No, she didn't. Mary ___ instead.",a:"went",o:["go","gone","went","been"],fr:"Mary y est allée",n:"Passé simple : go / went / gone."},
+{t:"gt",s:"- Have you heard the news?\n- No, what's happened?\n- The Prime Minister ___ elected!",a:"has just been",o:["has just","had just been","has just been","is just being"],fr:"vient d'être élu",n:"Passif + action très récente → has just been + participe."},
+{t:"gt",s:"When I got home, the children had already ___ to bed.",a:"gone",o:["been","gone","going","went"],fr:"étaient déjà allés au lit",n:"had + participe passé (gone). « went » est un prétérit, jamais après had."},
+{t:"gt",s:"I clearly remember the day of my first presentation. I was so disappointed! I was the last to speak that morning and, by the time it was my turn, many people ___ already left to catch their planes!",a:"had",o:["have","did","had","has"],fr:"étaient déjà partis",n:"by the time + passé → l'action d'avant est au past perfect (had left).",trap:"have"},
+{t:"gt",s:"While working for the company in New York, I ___ many interesting people.",a:"met",o:["met","was meeting","did meet"],fr:"j'ai rencontré",n:"Faits terminés dans le passé → prétérit simple."},
+{t:"gt",s:"The Board of Directors ___ in Paris next Thursday.",a:"is meeting",o:["is meeting","met","have met","going to meet"],fr:"se réunit jeudi prochain",n:"Rendez-vous déjà fixé → présent continu à valeur de futur."},
+{t:"gt",s:"- What is the strangest thing you ___\n- I suppose it was snake. I tried it when I was in Indonesia on holiday.",a:"have ever eaten?",o:["have ever eaten?","have never eaten?","ever did eat?"],fr:"que tu aies jamais mangé",n:"Superlatif + expérience de vie → present perfect + ever."},
+{t:"gt",s:"David, we hope you have a wonderful retirement. It has been a pleasure working with you over the last twenty-five years. I am curious to know what ___ this time next year.",a:"you will be doing",o:["you would do","you will be doing","you are going to do"],fr:"ce que tu feras à ce moment-là",n:"this time next year → futur continu (will be + -ing). Pas d'inversion dans une question indirecte."},
+{t:"gt",s:"- I'm really looking forward to our trip to London.\n- But you told me you didn't know London.\n- I think you misunderstood me, I said I ___ back and forwards to London on business for many years, but that I didn't know it from a tourist's point of view.",a:"had been going",o:["used to be going","had gone","had been going","was going"],fr:"j'y allais régulièrement depuis des années",n:"Discours rapporté de « I have been going… for many years » → had been going (action répétée sur une durée).",trap:"had gone"},
+{t:"gt",s:"- Where ___ going on holiday this summer?\n- I don't know. We are still thinking about it.",a:"are you",o:["have you","will you","are you"],fr:"où partez-vous",n:"Question au présent continu (going) → are you going."},
+{t:"gt",s:"___ send Alistair a copy of the email, but then Emily said it would be a better idea to call him.",a:"I was going to",o:["I was thinking about","I was on the point of","I was going to"],fr:"j'allais (mais j'ai changé d'avis)",n:"was going to + verbe = intention passée non réalisée. « thinking about » et « on the point of » demandent -ING."},
+{t:"gt",s:"- ___\n- Three times: in 1992, 1997, and 2003. I'm going there again next year.",a:"How many times have you been to Paris?",o:["None of these answers are correct.","When did you last go to Paris?","How many times have you been to Paris?","When were you going to Paris?"],fr:"combien de fois es-tu allé à Paris ?",n:"Nombre de fois dans la vie → present perfect (have you been)."},
+{t:"gt",s:"- What are you doing this evening?\n- I ___ television with my wife.",a:"am watching",fr:"je regarde (ce soir)",n:"Projet prévu → présent continu, comme la question."},
+{t:"gt",s:"- Excuse me, do you know when my lunch will be ready?\n- ___",a:"In 10 minutes. It is being prepared as we speak.",o:["In 10 minutes. It is preparing as we speak.","In 10 minutes. It is being prepared as we speak.","In 10 minutes. It is prepared as we speak.","None of these answers are correct."],fr:"il est en train d'être préparé",n:"Passif en cours : is being + participe passé."},
+{t:"gt",s:"- Would you like to read this book? I thought it was really good.\n- Oh, no thanks. I ___",a:"have already read it.",o:["have already read it.","already read it.","have been reading it.","was already reading it."],fr:"je l'ai déjà lu",n:"already + résultat présent → present perfect (anglais britannique, celui du test).",trap:"already read it."},
+{t:"gt",s:"Sorry John, ___ late. The train just broke down.",a:"I'm going to be",o:["I'm going to be","I'll be","I'll have gone"],fr:"je vais être en retard",n:"Prédiction basée sur une preuve présente (le train est en panne) → be going to.",trap:"I'll be"},
+{t:"gt",s:"- How long have the two of you known ___?\n- Since 2002.",a:"each other",fr:"l'un l'autre",n:"each other = réciproque (se connaître mutuellement)."},
+{t:"gt",s:"When I was young I ___ swim, but I can now. I didn't learn until I was 25.",a:"couldn't",alt:["could not"],fr:"je ne savais pas",n:"Capacité au passé : could / couldn't."},
+{t:"gt",s:"I had a friend at college who was very gifted with languages. She ___ speak four or five!",a:"was able to",o:["was able to","use to be able to","will be able to"],fr:"elle savait parler",n:"Capacité dans le passé : was able to / could."},
+{t:"gt",s:"I was supposed ___ meet my friend Susan yesterday, but she had to work late and cancelled last minute.",a:"to",fr:"j'étais censé",n:"be supposed TO + verbe."},
+{t:"gt",s:"Kyle won the skydiving competition last year, and seems likely to ___ so again this year.",a:"do",fr:"le refaire",n:"do so = reprendre un verbe déjà dit."},
 
-const KEY="vocabB2.v1";let ST={};
-try{ST=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){ST={}}
+{t:"gc",s:"___ you change your mind about leaving the company, we would be happy for you to stay with us.",a:"Should",fr:"si jamais",n:"Inversion formelle : Should you… = If you should… (si jamais)."},
+{t:"gc",s:"- What do you think is the best way to encourage young people to buy our product?\n- Well, ___, I'd start by advertising in teen magazines.",a:"if I were you",o:["if I were you","if I am you","if I would be you"],fr:"à ta place",n:"Conseil : If I were you, I'd… (were pour toutes les personnes)."},
+{t:"gc",s:"- What are you going to do after work?\n- If I ___ time, I'll go to the cinema with a few friends.",a:"have",o:["will have","had","have"],fr:"si j'ai le temps",n:"Conditionnel 1 : If + présent, will + verbe. Jamais « will » après if."},
+{t:"gc",s:"You look very ill. If I were you, I ___ a doctor.",a:"would see",o:["will see","would see","could see"],fr:"j'irais voir",n:"If I were you → would + verbe."},
+{t:"gc",s:"I wish that the trains were more reliable! If the train ___ on time yesterday, I ___ late for the concert!",a:["had come","wouldn't have arrived"],alt:[[],["would not have arrived"]],fr:"si le train était arrivé… je ne serais pas arrivé",n:"Conditionnel 3 (passé imaginaire) : If + had + participe, would have + participe."},
+{t:"gc",s:"- How did you get on at the team-building weekend?\n- It was great, but very intense. ___ introduced ourselves when the group leader had us running, jumping over obstacles and climbing up walls.",a:"Barely had we",o:["We had","Had we","Barely had we","Had we barely"],fr:"à peine nous étions-nous présentés que",n:"Inversion après un adverbe négatif : Barely / Hardly / Scarcely had we… when."},
+{t:"gc",s:"As is often the way with technology, ___ had they fixed the bug ___ the operating system became obsolete.",a:["no sooner","than"],alt:[["hardly","scarcely"],["when"]],fr:"à peine… que",n:"No sooner had they… THAN ; Hardly had they… WHEN.",trap:"once / they discovered"},
+
+{t:"gf",s:"Tom was exhausted, and he longed ___ the meeting ___ so he could go home.",a:["for","to finish"],fr:"il attendait avec impatience que la réunion finisse",n:"long for sb/sth to do sth = désirer ardemment que."},
+{t:"gf",s:"- Where are you going for your next holiday?\n- I'm going to Paris ___ an old friend.",a:"to visit",o:["to visiting","to visit","for visiting","visit"],fr:"pour rendre visite",n:"But (pour) → to + verbe. Jamais « for + -ing » pour un but."},
+{t:"gf",s:"- When did you last see it?\n- Well, I remember ___ it at the supermarket checkout. Maybe it's still there.",a:"seeing",o:["to have seen","I had seen","seeing","to see"],fr:"je me souviens de l'avoir vu",n:"remember + -ING = souvenir du passé ; remember TO = ne pas oublier de faire."},
+{t:"gf",s:"I think people nowadays are a lot more technically-minded than they ___ be.",a:"used to",o:["would","use to","had to","used to"],fr:"qu'avant",n:"used to + verbe = habitude/état passé."},
+{t:"gf",s:"I'm going to England next week and I'm a little worried because ___ driving on the left side of the road!",a:"I'm not used to",o:["I don't usually","I don't use to","I'm not used to","I didn't use to"],fr:"je n'ai pas l'habitude de",n:"be used to + -ING = être habitué à (≠ used to + verbe)."},
+{t:"gf",s:"Malcolm is not impressed with Chrissie. Yesterday, he asked her to stop ___ her phone during working hours.",a:"reading",fr:"arrêter de lire",n:"stop + -ING = arrêter de faire ; stop TO do = s'arrêter pour faire."},
+{t:"gf",s:"- How is your new phone?\n- Horrible! I really ___ it! It's slow, glitchy and the battery doesn't last more than 30 minutes.",a:"regret buying",fr:"je regrette de l'avoir acheté",n:"regret + -ING = regretter une action passée."},
+{t:"gf",s:"I believe this company can achieve great things and I am highly committed ___ raising its profits by 50%!",a:"to",fr:"engagé à",n:"committed TO + -ING : ici « to » est une préposition (comme look forward to)."},
+{t:"gf",s:"I was on the brink ___ on my essay, when my roommate providentially arrived with some coffee and encouragement.",a:"of giving up",fr:"sur le point d'abandonner",n:"on the brink OF + -ING (préposition + -ing).",trap:"to give up"},
+{t:"gf",s:"- How is your new job going?\n- Very well, thanks. I'm expecting ___ a pay-rise next month.",a:"to be given",fr:"à recevoir",n:"expect + to + passif (be given)."},
+{t:"gf",s:"The site is due ___ maintenance from 8pm until 1am this evening. We apologise for any inconvenience caused.",a:"to undergo",fr:"doit subir",n:"be due to + verbe = être prévu pour."},
+{t:"gf",s:"Dealing with the problem of bullying in our schools means encouraging children ___ themselves, rather than trying to over-protect them.",a:"to stand up for",fr:"à se défendre",n:"stand up for oneself = se défendre (4 mots : to stand up for). « take care off » n'existe pas (c'est « of »).",trap:"to take care off"},
+{t:"gf",s:"Pete has been unable ___ the money he invested in the collapsed analytics company, ABC Enterprises.",a:"to recover",fr:"récupérer",n:"unable TO + verbe."},
+{t:"gf",s:"10 years of research ___ the discovery of a new vaccine.",a:"has culminated in",fr:"a abouti à",n:"culminate IN = aboutir à."},
+
+{t:"gs",s:"- I couldn't understand a word he was saying...\n- ___",a:"Neither could I!",o:["So could I!","Neither can I!","Me too!","Neither could I!"],fr:"moi non plus",n:"Phrase négative au passé (couldn't) → Neither could I."},
+{t:"gs",s:"- I don't like Japanese food.\n- Neither ___. I don't like raw fish.",a:"do I",fr:"moi non plus",n:"Neither + auxiliaire + sujet (présent simple → do)."},
+{t:"gs",s:"- I don't have enough money to buy a ticket to Brussels. Can you lend me some, please?\n- Sorry, I don't have enough money ___.",a:"either",o:["also","either","neither","too"],fr:"non plus (en fin de phrase)",n:"Phrase déjà négative (don't) → either en fin de phrase. Neither se met en début : « Neither do I ».",trap:"neither"},
+{t:"gs",s:"- Don't forget to take your keys!\n- No, I ___",a:"won't.",o:["want.","don't forget.","don't.","won't."],fr:"non, je n'oublierai pas",n:"Réponse courte au futur : No, I won't."},
+{t:"gs",s:"- We really need this report finished by the end of the day.\n- You will be working on it all afternoon, ___",a:"won't you?",o:["aren't you?","are you?","will you?","won't you?"],fr:"n'est-ce pas ?",n:"Question tag : auxiliaire de la phrase (will) à la forme inverse → won't you?"},
+{t:"gs",s:"- Where are the keys ___ I left on the desk?",a:"which",o:["which","those","who","whom"],fr:"que",n:"Relatif pour une chose : which / that. who/whom = personnes."},
+{t:"gs",s:"With a population of over 20 million inhabitants, this city is ___ city in the world.",a:"the biggest",o:["the bigger","biggest","the most","the biggest"],fr:"la plus grande",n:"Superlatif : THE + adj-est."},
+{t:"gs",s:"I arrive at work at 9.30 am; Jimmy arrives at 8.30 am. He arrives ___ than me.",a:"earlier",o:["earlier","early","earliest"],fr:"plus tôt",n:"Comparatif avec than : early → earlier."},
+{t:"gs",s:"You need to make sure that you drive ___ because of the storm.",a:"carefully",o:["prudently","with attention","carefully","careful"],fr:"prudemment",n:"Un verbe (drive) se décrit avec un ADVERBE en -ly."},
+{t:"gs",s:"- What's wrong, Jon?\n- I'm ___. I hate Sunday evenings.",a:"bored",o:["None of these answers are correct.","bored","boring","tiring"],fr:"je m'ennuie",n:"-ED = ce qu'on ressent ; -ING = ce qui provoque (Sunday evenings are boring)."},
+{t:"gs",s:"Jane is always very ___ - she always arrives on time for work.",a:"punctual",fr:"ponctuelle",n:"punctual = à l'heure."},
+{t:"gs",s:"- How ___ time does it take to get to London?\n- It takes about two hours.",a:"much",fr:"combien de temps",n:"time est indénombrable → how much time (ou how long)."},
+{t:"gs",s:"- What is that guest lecture ___?\n- The speaker analyses the role of social media in our daily lives.",a:"about",fr:"de quoi parle",n:"What is it about? La préposition reste en fin de question."},
+{t:"gs",s:"- ___ a movie last night when I phoned?\n- No, I wasn't.",a:"Were you watching",fr:"est-ce que tu regardais",n:"Question au past continuous : Were you + -ing (réponse « I wasn't »)."},
+{t:"gs",s:"- What did you get for your birthday?\n- I was ___ a new iPhone.",a:"given",fr:"on m'a offert",n:"Passif avec une personne comme sujet : I was given sth."},
+{t:"gs",s:"Hello everybody. My name is Francois Hollande, and ___ you know, I am the French president.",a:"as",fr:"comme vous le savez",n:"as you know = comme vous le savez."},
+{t:"gs",s:"Comic Relief is a charity event screened every year on UK TV to raise money ___ children everywhere.",a:"for",fr:"au profit de",n:"raise money FOR sb/sth. « in favour of » = être pour (une idée).",trap:"in favour of"},
+
+{t:"gl",s:"___ these fresh outpourings of grief, we wonder what now lies ahead for this war-torn country. (préposition)",a:"Amid",alt:["amidst"],fr:"au milieu de",n:"amid(st) = au milieu de (contexte formel, journalistique)."},
+{t:"gl",s:"It's not just a matter of ___ of this issue in the media, we also need to take direct action. (2 mots)",a:"raising awareness",fr:"sensibiliser",n:"raise awareness of sth = sensibiliser à."},
+{t:"gl",s:"This list of vocabulary is comprehensive but not ___. You are bound to find plenty more words and phrases to add!",a:"exhaustive",fr:"exhaustive",n:"comprehensive = très complet ; exhaustive = absolument complet."},
+{t:"gl",s:"In the face of overwhelming opposition, the Home Secretary ___ to capitulate or resign.",a:"was forced",o:["was manipulated","was forced","was informed"],fr:"a été contraint",n:"be forced TO do sth = être obligé de.",trap:"was manipulated"},
+{t:"gl",s:"Losing his business and his partner in a cruel twist of fate nearly tipped John ___. He's much better now and seems to be back ___.",a:["over the edge","from the brink"],fr:"faire craquer / revenu de loin",n:"tip sb over the edge = faire basculer ; back from the brink = revenu du bord du gouffre."},
+{t:"gl",s:"If you want to go out tonight, count me ___. I'm grounded!",a:"out",fr:"sans moi",n:"count me out ≠ count me in."},
+{t:"gl",s:"Many charities simply do not have the funding to care for rough sleepers and have to rely heavily on ___ workers. The growing number of ___ people in our communities continues to be a blight on our society.",a:["voluntary","homeless"],alt:[["volunteer"],[]],fr:"bénévoles / sans-abri",n:"voluntary workers = bénévoles ; rough sleepers = homeless people."},
+{t:"gl",s:"For an upright man with so much experience of the world, his response to this situation seems somewhat naïve, even weak, and rather lacking in ___ judgement.",a:"sound",o:["moral","sound","poor","partial"],fr:"bon jugement",n:"sound judgement = jugement sûr (collocation fixe).",trap:"moral"},
+{t:"gl",s:"Certainly at the beginning of the novel, haughty Mr Darcy appears to think the society in Hertfordshire rather ___ him. (préposition)",a:"beneath",fr:"indigne de lui",n:"beneath sb = au-dessous de son rang."},
+{t:"gl",s:"The ___ of responsibility is something she has carried lightly throughout her reign: she has certainly given no sign of being weighed down ___ it.",a:["weight","by"],fr:"le poids des responsabilités",n:"the weight of responsibility ; weighed down by = accablé par.",trap:"taking"},
+{t:"gl",s:"There has always been enormous ___ around this highly emotive issue and it doesn't seem things will ever be ___ to everyone's satisfaction.",a:["controversy","resolved"],alt:[["contention"],["settled"]],fr:"controverse / résolu",n:"controversy around an issue ; resolve an issue."},
+{t:"gl",s:"You can ___ an employee when you temporarily can't give them paid work if the employment contract allows this. The aim is to avoid ___.",a:["lay off","redundancies"],fr:"mettre en chômage temporaire / licenciements",n:"Mise à pied temporaire pour éviter les licenciements (redundancies).",trap:"any issues"},
+{t:"gl",s:"After exploring several avenues, the idea was ___ in favour of finding a simpler solution.",a:"abandoned",alt:["dropped","scrapped","rejected","shelved","discarded"],fr:"abandonnée",n:"Passif : the idea was abandoned / dropped.",trap:"was"},
+{t:"gl",s:"Though her parents were not especially keen on public schools and could certainly never ___ one, they were delighted when Bethany won a ___ to one of the top UK boarding schools.",a:["afford","scholarship"],fr:"se payer / bourse",n:"afford = avoir les moyens ; win a scholarship = obtenir une bourse.",trap:"envisage"},
+{t:"gl",s:"___ evidence alone is misleading and these data are often presented as fact in a way that would ___ even the greatest sceptic that they were absolute.",a:["Statistical","convince"],alt:[["anecdotal"],["persuade"]],fr:"statistiques / convaincre",n:"Adjectif devant evidence (« these data » → statistical). convince sb that…",trap:"Misleading"},
+{t:"gl",s:"Many teenagers seem to be facing a bleak future mired in debt and unable even to ___ owning their own homes.",a:"contemplate",o:["scrutinise","contemplate","chew over"],fr:"envisager",n:"contemplate + -ING = envisager de."},
+{t:"gl",s:"The company had based their financial forecasts on the false ___ the economy would improve.",a:"premise that",fr:"l'hypothèse (erronée) que",n:"on the premise that = en partant du principe que."},
+{t:"gl",s:"Although they have changed the face of farming in the USA, ___ crops are still regarded with deep ___ in the UK where the emphasis remains on \"natural\" products.",a:["genetically modified","suspicion"],fr:"OGM / méfiance",n:"regard sth with suspicion = voir d'un mauvais œil."},
+{t:"gl",s:"The lawsuit was dropped after police failed to find sufficient evidence. No ___ will be taken. (2 mots)",a:"further action",fr:"aucune autre mesure",n:"No further action = classement sans suite."}
+];
+
+const R=[
+{t:"rs",s:"Voicemail message\n\"This is Carol Richardson. I am sorry but I am not available at the moment. I have gone off to Spain for two weeks and will have limited access to my emails. If there are any urgent matters, please call Anne Pearce on 0-4-7-5-3-6-8-9. She will be happy to help during my absence.\"",a:"Carol's colleague will take care of any problems.",o:["Carol is on sick leave.","Carol's colleague will take care of any problems.","Anne Pearce is Carol's manager.","Carol can be contacted easily by email."],fr:"une collègue gère les urgences",n:"« limited access to my emails » = PAS facilement joignable par mail. Rien ne dit qu'Anne est sa manager.",trap:"Carol can be contacted easily by email."},
+{t:"rs",s:"Information for bus passengers\nBuses leave from the main entrance at 7:00 a.m., 10:00 a.m., 1:00 p.m. and 7:00 p.m.\nPlease allow 30 minutes for your trip to Chicago and one hour for JFK Airport. As tickets cannot be bought on the bus, please purchase your ticket at one of our offices, or online.",a:"The bus driver does not sell tickets.",o:["You have to wait 30 minutes for your ticket.","The bus driver does not sell tickets.","Buses leave from the main entrance every three hours.","The bus takes one hour to go to Chicago."],fr:"pas de ticket dans le bus",n:"« tickets cannot be bought on the bus ». Pièges : 7h → 19h n'est pas toutes les 3 h ; Chicago = 30 min."},
+{t:"rs",s:"Flight confirmation\nWe are pleased to confirm your flight BA 773, departing from Paris on 25th September at 15:00, and arriving in London at 16:15. We would like to remind you that only one piece of hand luggage can be taken onto the flight free of charge and all other luggage – hand luggage or other – will be subject to a surcharge. It is strongly recommended that you arrive an hour before your departure.",a:"There will be no cost for one piece of hand luggage.",o:["The flight will be arriving in Paris at 16:15.","There will be no cost for one piece of hand luggage.","If you arrive less than one hour before the flight, it is not possible to check in.","All hand luggage on the flight is free of charge."],fr:"un bagage cabine gratuit",n:"free of charge = gratuit. « strongly recommended » ≠ obligatoire. Arrivée à LONDRES."},
+{t:"rs",s:"Our company (Studly PLC) worked with Logitrac suppliers for over ten years. At first their service was efficient and reliable, but over the last two years it became increasingly erratic, with late deliveries and poor communication. In the end we had to tell them that their level of service was simply not acceptable. We recently changed to a different supplier.",a:"Logitrac's standard of service worsened over the last two years.",o:["Studly PLC continues to work with Logitrac.","None of these answers are correct.","Logitrac's standard of service worsened over the last two years.","Logitrac's main strength was its communication."],fr:"le service s'est dégradé",n:"increasingly erratic = de plus en plus irrégulier ; « poor communication » contredit l'option piège.",trap:"Logitrac's main strength was its communication."},
+{t:"rs",s:"Carol: Have you heard the news?\nJane: No. What?\nCarol: Paul's lottery ticket number was selected. He has won a fortune and is now wealthy! He's going to give up his job and sail around the world.\nJane: Well, that is a surprise! After all those years of working as a baker, he has really done well for himself.",a:"Paul has won a lot of money.",o:["Paul is loaded down with problems.","Paul is going to continue working as a baker.","Paul has won a lot of money.","None of these answers are correct."],fr:"Paul a gagné beaucoup d'argent",n:"won a fortune = a lot of money. « loaded » (familier) = riche, mais « loaded down with problems » = accablé de problèmes.",trap:"None of these answers are correct."},
+{t:"rs",s:"\"There are still some issues to be resolved, as there always are just before the games,\" International Olympic Committee president Thomas Bach acknowledged as he attended a session of the IOC executive board in Sochi. \"But in this respect we are always in contact with the organising committee and we hope that the situation will be solved in the next couple of days,\" he added.",a:"None of these answers are correct.",o:["None of these answers are correct.","The organising committee has not given any information to the International Olympic Committee.","Thomas Bach is president of the organising committee.","The situation is sure to be resolved in the next two days."],fr:"aucune réponse ne colle",n:"« always in contact » ≠ pas d'info ; Bach préside le CIO, pas le comité d'organisation ; « we hope » ≠ « sure »."},
+{t:"rs",s:"Climate change means more extreme weather and baby penguins are paying the price with their lives, said a pair of studies out Wednesday. Severe rainstorms and unusual heat have killed large numbers of young Magellanic penguins at the bottom tip of South America, said one of the papers.",a:"Very warm temperatures can be harmful for baby penguins.",o:["None of these answers are correct.","Large numbers of baby penguins are dying across the whole of South America.","Baby penguins are dying as a result of exposure to cold temperatures.","Very warm temperatures can be harmful for baby penguins."],fr:"la chaleur tue des bébés manchots",n:"unusual heat = chaleur inhabituelle. « bottom tip » = seulement l'extrême sud, pas tout le continent.",trap:"None of these answers are correct."},
+{t:"rs",s:"Dear Mrs Ramsbottom,\nFurther to your recent request for an overdraft facility on your account, we regret to inform you that we will not be able to grant your request, as your account balance is already overdrawn (without authorisation). Please note that this amount must be cleared […]",a:"Mrs Ramsbottom would like to have an overdraft facility on her account.",o:["Mrs Ramsbottom has £300 in her current account.","Mrs Ramsbottom has an authorized overdraft on her account.","Mrs Ramsbottom would like to have an overdraft facility on her account.","None of these answers are correct."],fr:"elle demande un découvert autorisé",n:"request for an overdraft = elle le DEMANDE. overdrawn without authorisation = à découvert sans autorisation."},
+{t:"rs",s:"[Texte partiellement visible sur la photo] […] other social media giants' attempts to [fight fake news] will have a significant impact. But [sites posing] as serious journalism are not likely [to disappear]: [fake news has] become a means for some writers to [financially or politically] influence public opinion. Even as fake news causes confusion about current [events], people continue to circulate it.",a:"Fake news is a phenomenon that is here to stay.",o:["Fake news is a phenomenon that is here to stay.","Social media sites are ignoring the problem of fake news.","We are learning to limit the spread of fake news.","Fake news is a platform for journalists to gain credibility."],fr:"les fake news sont là pour rester",n:"« not likely to [disappear] » + « people continue to circulate it » → here to stay. Texte coupé sur la photo : réponse probable.",trap:"We are learning to limit the spread of fake news."},
+{t:"rs",s:"[Texte partiellement visible sur la photo] As a researcher at City University, London, I've studied football fans and their bad language […] It's no surprise that football fans swear, but it [isn't] as aggressive as you might think – fans [almost] never swear about their opponents […]. In writing about swearing I'm not attempting [to defend rudeness] and aggression. […] swearing [needs] its emotional impact to be effective. […] as some swear words become mild through overuse or shifting cultural values, we [find new] taboos to fill the gap.",a:"Research shows that swearing acts as an important emotional tool.",o:["Research shows that swearing acts as an important emotional tool.","Swear words are the most enduring feature of language.","Swearing is no longer considered to be socially unacceptable.","Football fans swear more than any other group surveyed."],fr:"jurer a une fonction émotionnelle",n:"« emotional impact » + de nouveaux tabous remplacent les anciens → jurer reste tabou. Texte coupé : réponse probable.",trap:"Swearing is no longer considered to be socially unacceptable."}
+];
+
+const SUB={r:{name:"Lecture",T:{rs:"Compréhension écrite"}},v:{name:"Vocabulaire",T:{pv:"Phrasal verbs",id:"Expressions",job:"Travail & argent",wf:"Formation de mots",mx:"Mots à bien choisir"}},
+           g:{name:"Grammaire",T:{gt:"Temps des verbes",gc:"Conditionnel & inversion",gf:"Formes verbales (to / -ing)",gs:"Petites structures",gl:"Niveau avancé"}}};
+const norm=s=>String(s).toLowerCase().replace(/[’']/g,"'").replace(/[.!?,"]/g,"").replace(/\s+/g," ").trim();
+const ALL=[];
+D.forEach((d,i)=>{d.k="v";d.id="v"+i;ALL.push(d)});
+G.forEach((d,i)=>{d.k="g";d.id="g"+i;ALL.push(d)});
+R.forEach((d,i)=>{d.k="r";d.id="r"+i;ALL.push(d)});
+ALL.forEach(d=>{
+  const ans=Array.isArray(d.a)?d.a:[d.a];
+  const alt=Array.isArray(d.a)?(d.alt||ans.map(()=>[])):[d.alt||[]];
+  d.blanks=ans.map((a,j)=>[a,...(alt[j]||[])].map(norm));
+});
+
+const KEY="vocabB2.v2";let ST={};
+try{ST=JSON.parse(localStorage.getItem(KEY)||"null")||{};
+  if(!Object.keys(ST).length){const old=JSON.parse(localStorage.getItem("vocabB2.v1")||"{}")||{};for(const k in old)ST["v"+k]=old[k]}}catch(e){ST={}}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
 const st=id=>ST[id]||(ST[id]={ok:0,ko:0,run:0});
 const mastered=id=>(ST[id]&&ST[id].run>=2);
 function mark(id,good){const s=st(id);if(good){s.ok++;s.run++}else{s.ko++;s.run=0}save();gauge()}
-function gauge(){const n=D.filter(d=>mastered(d.id)).length;gN.textContent=n;gT.textContent=D.length;gBar.style.width=(100*n/D.length)+"%"}
 
-const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const sent=(d,filled)=>esc(d.s).replace(/\n/g,"<br>").replace("___",filled?`<span class="fill">${esc(d.a)}</span>`:`<span class="blank">____</span>`);
+let sub="v",mode="list",filter="all",q="";
+try{const p=JSON.parse(localStorage.getItem("vocabB2.ui")||"{}");if(p.sub)sub=p.sub;if(p.mode)mode=p.mode}catch(e){}
+const saveUi=()=>{try{localStorage.setItem("vocabB2.ui",JSON.stringify({sub,mode}))}catch(e){}};
+const items=()=>ALL.filter(d=>d.k===sub);
+const T=()=>SUB[sub].T;
+
+function gauge(){const it=items();const n=it.filter(d=>mastered(d.id)).length;gN.textContent=n;gT.textContent=it.length;gBar.style.width=(100*n/it.length)+"%";
+  document.querySelectorAll("#subj button").forEach(b=>{const k=b.dataset.s;const all=ALL.filter(d=>d.k===k);b.querySelector("small").textContent=all.filter(d=>mastered(d.id)).length+" / "+all.length})}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ansList=d=>Array.isArray(d.a)?d.a:[d.a];
+const ansText=d=>ansList(d).join(" … ");
+function sent(d,filled){let j=0;const A=ansList(d);const multi=A.length>1;
+  return esc(d.s).replace(/\n/g,"<br>").replace(/___/g,()=>{const k=j++;return filled?`<span class="fill">${esc(A[k])}</span>`:`<span class="blank">${multi?"("+(k+1)+")":"&nbsp;"}</span>`})}
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const norm=s=>s.toLowerCase().replace(/[’']/g,"'").replace(/[.!?,]/g,"").replace(/\s+/g," ").trim();
 
-let mode="list",filter="all",q="";
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
+function setSub(s){sub=s;filter="all";q="";saveUi();document.querySelectorAll("#subj button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.s===sub));gauge();render()}
+function setMode(m){mode=m;saveUi();document.querySelectorAll("nav#modes button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===mode));render()}
+document.querySelectorAll("#subj button").forEach(b=>b.onclick=()=>setSub(b.dataset.s));
+document.querySelectorAll("nav#modes button").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
 
-function pool(){let p=D;if(filter==="weak")p=D.filter(d=>!mastered(d.id));else if(filter==="trap")p=D.filter(d=>d.trap);else if(filter!=="all")p=D.filter(d=>d.t===filter);return p}
-function filterSelect(){return `<select id="flt" aria-label="Filtrer">
-<option value="all">Les ${D.length} mots</option>
+function pool(){let p=items();if(filter==="weak")p=p.filter(d=>!mastered(d.id));else if(filter==="trap")p=p.filter(d=>d.trap);else if(filter!=="all")p=p.filter(d=>d.t===filter);return p}
+function filterSelect(){const it=items();return `<select id="flt" aria-label="Filtrer">
+<option value="all">Tout (${it.length})</option>
 <option value="weak">Pas encore maîtrisés</option>
-<option value="trap">Pièges des photos</option>
-${Object.entries(T).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>`}
+<option value="trap">Pièges des photos (${it.filter(d=>d.trap).length})</option>
+${Object.entries(T()).map(([k,v])=>`<option value="${k}">${v} (${it.filter(d=>d.t===k).length})</option>`).join("")}</select>`}
 function bindFilter(cb){const f=document.getElementById("flt");f.value=filter;f.onchange=()=>{filter=f.value;cb()}}
 
 function render(){({list:renderList,cards:startCards,quiz:startQuiz})[mode]()}
 
 function renderList(){
-  view.innerHTML=`<p class="tip">Lis chaque phrase en entier : à l'examen, c'est le contexte qui te donne la réponse. Le point vert indique un mot maîtrisé (2 bonnes réponses de suite).</p>
-  <div class="controls">${filterSelect()}<input class="search" id="srch" type="search" placeholder="Chercher un mot…" value="${esc(q)}"></div><div id="lst"></div>`;
+  view.innerHTML=`<p class="tip">Lis chaque phrase en entier : c'est le contexte qui donne la réponse. Le point vert indique une question maîtrisée (2 bonnes réponses de suite).</p>
+  <div class="controls">${filterSelect()}<input class="search" id="srch" type="search" placeholder="Chercher…" value="${esc(q)}"></div><div id="lst"></div>`;
   bindFilter(renderList);
   const s=document.getElementById("srch");s.oninput=()=>{q=s.value;draw()};
   function draw(){
-    const p=pool().filter(d=>!q||(d.a+" "+d.fr+" "+d.s).toLowerCase().includes(q.toLowerCase()));
-    let h="";for(const k of Object.keys(T)){const g=p.filter(d=>d.t===k);if(!g.length)continue;
-      h+=`<h2>${T[k]} · ${g.length}</h2>`+g.map(d=>`<div class="item">
-      <div class="head"><span class="dot ${mastered(d.id)?"ok":""}" title="${mastered(d.id)?"Maîtrisé":"À travailler"}"></span><span class="w">${esc(d.a)}</span><span class="fr">${esc(d.fr)}</span></div>
+    const p=pool().filter(d=>!q||(ansText(d)+" "+d.fr+" "+d.s).toLowerCase().includes(q.toLowerCase()));
+    let h="";for(const k of Object.keys(T())){const g=p.filter(d=>d.t===k);if(!g.length)continue;
+      h+=`<h2>${T()[k]} · ${g.length}</h2>`+g.map(d=>`<div class="item">
+      <div class="head"><span class="dot ${mastered(d.id)?"ok":""}" title="${mastered(d.id)?"Maîtrisé":"À travailler"}"></span><span class="w">${esc(ansText(d))}</span><span class="fr">${esc(d.fr)}</span></div>
       <p class="s">${sent(d,true)}</p><p class="n">${esc(d.n)}</p>
       ${d.trap?`<span class="trap">Sur la photo : « ${esc(d.trap)} », c'est faux</span>`:""}</div>`).join("")}
-    lst.innerHTML=h||`<p class="tip">Aucun mot ne correspond.</p>`}
+    lst.innerHTML=h||`<p class="tip">Aucun résultat.</p>`}
   draw();
 }
 
@@ -217,9 +355,9 @@ function drawCard(){
   const d=cq[ci];
   view.innerHTML=`<div class="controls">${filterSelect()}</div>
   <div class="panel card" id="crd" tabindex="0" role="button" aria-label="Retourner la carte">
-    <div class="meta"><span>${T[d.t]}</span><span>${ci+1} / ${cq.length}</span></div>
-    ${flipped?`<div class="back"><span class="big">${esc(d.a)}</span><span class="fr" style="color:var(--ink);font-weight:700">${esc(d.fr)}</span><p class="q" style="font-size:1rem">${sent(d,true)}</p><p class="hint">${esc(d.n)}</p></div>`
-    :`<p class="q">${sent(d,false)}</p><p class="hint">Trouve le mot dans ta tête, puis touche la carte.</p>`}
+    <div class="meta"><span>${T()[d.t]}</span><span>${ci+1} / ${cq.length}</span></div>
+    ${flipped?`<div class="back"><span class="big">${esc(ansText(d))}</span><span class="fr" style="color:var(--ink);font-weight:700">${esc(d.fr)}</span><p class="q" style="font-size:1rem">${sent(d,true)}</p><p class="hint">${esc(d.n)}</p></div>`
+    :`<p class="q">${sent(d,false)}</p><p class="hint">Trouve la réponse dans ta tête, puis touche la carte.</p>`}
   </div>
   ${flipped?`<div class="row" style="margin-top:12px"><button class="btn bad" id="no">À revoir</button><button class="btn good" id="yes">Je savais</button></div>`:""}`;
   bindFilter(startCards);
@@ -231,36 +369,40 @@ function drawCard(){
 
 let qq=[],qi=0,score=0,total=0,missed=new Set();
 function startQuiz(){qq=shuffle(pool());qi=0;score=0;total=qq.length;missed=new Set();drawQ()}
+const words=s=>s.trim().split(/\s+/).length;
 function drawQ(){
   if(!qq.length){view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><p>Rien à tester dans ce filtre.</p></div>`;bindFilter(startQuiz);return}
   if(qi>=qq.length){const pct=Math.round(100*score/total);
     view.innerHTML=`<div class="controls">${filterSelect()}</div><div class="panel done"><p class="hint">Bonnes réponses du premier coup</p><div class="score">${score} / ${total}</div>
-    <p>${pct>=85?"Niveau solide. Refais un tour demain pour fixer.":pct>=60?"Bien parti. Repasse les mots ratés en mode « Pas encore maîtrisés ».":"Repasse par les Fiches puis les Cartes avant de retenter."}</p>
+    <p>${pct>=85?"Niveau solide. Refais un tour demain pour fixer.":pct>=60?"Bien parti. Repasse les questions ratées avec le filtre « Pas encore maîtrisés ».":"Repasse par les Fiches puis les Cartes avant de retenter."}</p>
     <div class="row"><button class="btn" id="again">Nouveau test</button></div></div>`;bindFilter(startQuiz);again.onclick=startQuiz;return}
-  const d=qq[qi];const retry=missed.has(d.id);
+  const d=qq[qi];const retry=missed.has(d.id);const A=ansList(d);
+  const label=d.k==="r"?"Quelle phrase résume le mieux le texte ?":d.o?"Choisissez la bonne réponse":(A.length>1?"Remplissez les "+A.length+" blancs":"Remplissez le blanc · "+words(A[0])+" mot"+(words(A[0])>1?"s":""));
   view.innerHTML=`<div class="controls">${filterSelect()}</div>
-  <div class="panel">
-    <div class="meta"><span>${d.o?"Choisissez la bonne réponse":"Remplissez le blanc"+(d.a.includes(" ")?" · 2 mots":" · 1 mot")}${retry?" · 2e essai":""}</span><span>${qi+1} / ${qq.length} · score ${score}</span></div>
+  <div class="panel${d.k==="r"?" long":""}">
+    <div class="meta"><span>${label}${retry?" · 2e essai":""}</span><span>${qi+1} / ${qq.length} · score ${score}</span></div>
     <p class="q" id="qs">${sent(d,false)}</p>
     ${d.o?`<div class="opts">${shuffle(d.o).map(o=>`<button class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`
-    :`<form class="typed" id="tf"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse"><button class="btn">Valider</button></form>`}
+    :`<form class="typed" id="tf">${A.map((a,j)=>`<input id="ans${j}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${A.length>1?"Blanc ("+(j+1)+")":"Ta réponse"}" aria-label="Réponse ${j+1}">`).join("")}<button class="btn">Valider</button></form>`}
     <div id="fb"></div>
   </div>`;
   bindFilter(startQuiz);
-  if(d.o){document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(d,b.dataset.v))}
-  else{ans.focus({preventScroll:true});tf.onsubmit=e=>{e.preventDefault();if(ans.value.trim())answer(d,ans.value)}}
+  if(d.o){document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(d,[b.dataset.v]))}
+  else{document.getElementById("ans0").focus({preventScroll:true});tf.onsubmit=e=>{e.preventDefault();const v=A.map((a,j)=>document.getElementById("ans"+j).value);if(v.every(x=>x.trim()))answer(d,v)}}
 }
 function answer(d,v){
-  const good=d.acc.includes(norm(v));
+  const good=d.blanks.every((acc,j)=>acc.includes(norm(v[j]||"")));
   if(good&&!missed.has(d.id))score++;
   mark(d.id,good);
   if(!good&&!missed.has(d.id)){missed.add(d.id);qq.splice(Math.min(qi+4,qq.length),0,d)}
   qs.innerHTML=sent(d,true);
-  if(d.o)document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(norm(b.dataset.v)===d.acc[0])b.classList.add("right");else if(b.dataset.v===v)b.classList.add("wrong")});
-  else{ans.disabled=true;tf.querySelector("button").disabled=true}
-  fb.innerHTML=`<div class="fb ${good?"ok":"ko"}"><strong>${good?"Correct":"Réponse : "+esc(d.a)}</strong><p><b>${esc(d.fr)}</b></p><p>${esc(d.n)}</p>${!good?`<p class="hint">Cette question reviendra un peu plus loin.</p>`:""}</div>
+  if(d.o)document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(norm(b.dataset.v)===d.blanks[0][0])b.classList.add("right");else if(b.dataset.v===v[0])b.classList.add("wrong")});
+  else{tf.querySelectorAll("input,button").forEach(x=>x.disabled=true)}
+  fb.innerHTML=`<div class="fb ${good?"ok":"ko"}"><strong>${good?"Correct":"Réponse : "+esc(ansText(d))}</strong><p><b>${esc(d.fr)}</b></p><p>${esc(d.n)}</p>${!good?`<p class="hint">Cette question reviendra un peu plus loin.</p>`:""}</div>
   <div class="row" style="margin-top:12px"><button class="btn" id="nx">Suivant</button></div>`;
   nx.focus({preventScroll:true});nx.onclick=()=>{qi++;drawQ()};
 }
+document.querySelectorAll("#subj button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.s===sub));
+document.querySelectorAll("nav#modes button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===mode));
 gauge();render();
 </script>
